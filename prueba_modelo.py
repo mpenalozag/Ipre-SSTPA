@@ -77,7 +77,7 @@ for i in I:
 		for t in T:
 				for f in F:
 					if t < 59:
-						if f >= F[0] + 1 and B[i][t][f] == 1:
+						if f >= F[0] + 1 and B[i][t][f] == 1 and (EV[i][n] + EL[i][n]) == 1:
 							m.addConstr( (p[i, t, f-1] <= quicksum(R[i][n][b]*p[i, t+b, f]+(1-x[n, f]) for b in A)) , name='R9')
 
 
@@ -86,7 +86,7 @@ for i in I:
 	for n in N:
 		for t in T:
 			for f in F:
-				if f == F[0] and t < 59 and B[i][t][f] == 1:
+				if f == F[0] and t < 59 and B[i][t][f] == 1 and EB[i][t] == 1 and (EV[i][n] + EL[i][n]) == 1:
 					m.addConstr( (EB[i][t] <= quicksum(R[i][n][b]*p[i, t+b, f]+(1-x[n, f]) for b in A)) , name='R10')
 
 
@@ -134,5 +134,7 @@ m.addConstrs((d[i, f] <= d[i, f - 1] for i in I
 #Objetivo que queremos alcanzar al optimizar
 m.setObjective(quicksum(quicksum(V[f] * (a[i, f] + d[i, f]) for i in I) for f in F), GRB.MAXIMIZE)
 m.optimize()
+
+print(F[0])
 
 parse_output(m.getVars(), matches)
